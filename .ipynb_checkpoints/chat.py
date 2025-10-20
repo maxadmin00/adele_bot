@@ -14,10 +14,8 @@ class Agent:
     def __init__(self, num_players):
         if "MISTRAL_API_KEY" not in os.environ:
             os.environ["MISTRAL_API_KEY"] = getpass.getpass("Enter your Mistral API key: ")
-        #bTbap9LPxThHl6xa03apaGS6wdhNH4Ue
         if "HF_TOKEN" not in os.environ:
             os.environ["HF_TOKEN"] = getpass.getpass("Enter your hf key: ")
-        #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
 
         embeddings = MistralAIEmbeddings(model="mistral-embed")
 
