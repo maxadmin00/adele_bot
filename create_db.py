@@ -5,6 +5,10 @@ import getpass
 import os
 from langchain_mistralai import MistralAIEmbeddings
 from langchain_chroma import Chroma
+import dotenv
+import os
+
+dotenv.load_dotenv()
 
 if __name__ == '__main__':
     loader = UnstructuredLoader(
@@ -21,11 +25,9 @@ if __name__ == '__main__':
     texts = [preprocess(t) for t in parts]
 
     if "MISTRAL_API_KEY" not in os.environ:
-        os.environ["MISTRAL_API_KEY"] = getpass.getpass("Enter your Mistral API key: ")
-    #bTbap9LPxThHl6xa03apaGS6wdhNH4Ue
+        os.environ["MISTRAL_API_KEY"] = os.getenv("MISTRAL_API_KEY")
     if "HF_TOKEN" not in os.environ:
-        os.environ["HF_TOKEN"] = getpass.getpass("Enter your hf key: ")
-    #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
+        os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
 
     embeddings = MistralAIEmbeddings(model="mistral-embed")
 
