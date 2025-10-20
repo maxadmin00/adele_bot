@@ -9,13 +9,17 @@ from langchain.memory import ConversationBufferWindowMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 import re
+import dotenv
+import os
+
+dotenv.load_dotenv()
 
 class Agent:
     def __init__(self, num_players):
         if "MISTRAL_API_KEY" not in os.environ:
-            os.environ["MISTRAL_API_KEY"] = getpass.getpass("Enter your Mistral API key: ")
+            os.environ["MISTRAL_API_KEY"] = os.getenv("MISTRAL_API_KEY")
         if "HF_TOKEN" not in os.environ:
-            os.environ["HF_TOKEN"] = getpass.getpass("Enter your hf key: ")
+            os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
 
         embeddings = MistralAIEmbeddings(model="mistral-embed")
 
