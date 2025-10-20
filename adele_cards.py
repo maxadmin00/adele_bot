@@ -20,7 +20,7 @@ class Console:
                                          'разряженные батареи', 'взрывы', 'паника', 'атака'])
                                          for _ in range(4)]
     
-    def add_cap(self):
+    '''def add_cap(self):
         cap = random.choice(list(self.possible_caps.keys()))
         if self.possible_caps[cap] == 1:
             self.possible_caps.pop(cap)
@@ -36,4 +36,4 @@ class Console:
                 add = 3
             elif amount <=6:
                 add 
-        self.caps[cap]
+        self.caps[cap]'''
