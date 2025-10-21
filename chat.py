@@ -11,6 +11,7 @@ from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 import re
 import dotenv
 import os
+from adele_cards import Console
 
 dotenv.load_dotenv()
 
@@ -32,9 +33,10 @@ class Agent:
         llm = ChatOllama(
             model='qwen3:8b'
         )
-
+        
+        self.console = Console()
         tools = get_tools(vectorstore)
-        self.agent = create_react_agent(llm, tools)
+        self.agent = create_react_agent(llm, tools, self.console)
 
         self.memory = ConversationBufferWindowMemory(
                 k=10,
@@ -58,15 +60,18 @@ class Agent:
         self.memory.chat_memory.add_message(SystemMessage(content=system_prompt))
         self.prompt = ChatPromptTemplate(
             [MessagesPlaceholder("history"),
-            MessagesPlaceholder("msgs")]
-            #MessagesPlaceholder("console_status")] TODO: add info about console and cards
+            MessagesPlaceholder("msgs"),
+            MessagesPlaceholder("console_status"),
+            MessagesPlaceholder("move_number")]
         )
 
     def chat(self, text):
         self.memory.chat_memory.add_user_message(text)
 
         msg = self.llm.invoke(self.prompt.invoke({"msgs": [HumanMessage(content=text)],
-                                            "history": self.memory.chat_memory.messages}))
+                                            "history": self.memory.chat_memory.messages,
+                                            "move_number": self.console.move_number,
+                                            "console_status": self.console.get_console_info()}))
     
         agent_reply = msg["messages"][-1].content
         self.memory.chat_memory.add_ai_message(agent_reply)
@@ -85,5 +90,6 @@ if __name__ == '__main__':
         else:
             reply = agent.chat(text)
             print(re.sub(r"<think>.*?</think>", "", reply, flags=re.DOTALL))
+            agent.console.new_move()
 
     
