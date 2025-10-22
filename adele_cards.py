@@ -5,20 +5,20 @@ class Console:
     def __init__(self):
         self.move_number = 1
         self.energy = 15
-        self.caps = {'green': [],
-                    'gray': [],
-                    'red': [],
-                    'purple': [],
-                    'black': [],
-                    'blue': []} #TODO: переименовать название фишек
+        self.caps = {'шпионаж': [],
+                    'заблокированная дверь': [],
+                    'пожар': [],
+                    'гипоксия': [],
+                    'тьма': [],
+                    'блокировка': []}
         self.played_caps = 0
         
-        self.possible_caps = {'green': 9,
-                              'gray': 9,
-                              'red': 9,
-                              'purple': 9,
-                              'black': 9,
-                              'blue': 9
+        self.possible_caps = {'шпионаж': 9,
+                              'заблокированная дверь': 9,
+                              'пожар': 9,
+                              'гипоксия': 9,
+                              'тьма': 9,
+                              'блокировка': 9
                             }
         self.anomalies = [random.choice(['закрыть люки', 'деактивированные терминалы',
                                          'разряженные батареи', 'взрывы', 'паника', 'атака'])
@@ -31,7 +31,7 @@ class Console:
             while r1 == r2:
                 r2 = random.choice(possible_rooms)
 
-            comb = r1 + ' и ' + r2
+            comb = r1 + ' или ' + r2
             self.deck.append(comb)
         
         self.cards = []
@@ -47,7 +47,7 @@ class Console:
         return f'''доступно энергии {self.energy}
                 доступно аномалий {len(self.anomalies)}. стоимость одной аномалии: 5 единиц энергии
                 карты на руках (отображают возможное расположение фишек): {', '.join(self.cards)}
-                доступные фишки опасности: {', '.join([key + ' ' + str(value) + ' штук' for key, value in self.caps.items()])}
+                доступные фишки опасности: {', '.join([key + ' ' + str(len(value)) + ' штук' for key, value in self.caps.items()])}
                 '''
     
     def draw_card(self):
@@ -66,10 +66,11 @@ class Console:
         if len(self.caps[cap]) == 0:
             add = 2
         else:
-            add = np.floor(np.log2(len(self.caps[cap][-1]) + 1))
+            add = np.floor(np.log2(len(self.caps[cap]) + 1))
         self.caps[cap].append(add)
 
-    def play_anomaly(self, anomaly_ind: int):
+    def play_anomaly(self, anomaly_ind: int = 1):
+        """anomaly_ind: int - порядковый номер карты аномалии которую выбрали к розыгрышу"""
         if self.played_caps > 3 and self.energy > 5:
             anomaly = self.anomalies[anomaly_ind]
             self.anomalies.pop(anomaly_ind)
@@ -80,10 +81,10 @@ class Console:
             return 'не хватает энергии'
         else:
             return 'сыграно слишком мало фишек'
-        
-    def play_card(self, room: str, cap: str):
-        '''room: str - номер комнаты в которую нужно сыграть фишку
-        cap: str - фишка которую надо сыграть'''
+
+    def play_card(self, room: int = 1, cap: str = 'шпионаж'):
+        """room: str - номер комнаты в которую нужно сыграть фишку
+        cap: str - фишка которую надо сыграть"""
         has_room = False
         card = None
         for i, comb in enumerate(self.cards):
