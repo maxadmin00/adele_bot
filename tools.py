@@ -17,28 +17,34 @@ def get_tools(db, console):
         return "\n\n".join([doc.page_content for doc in retriever.get_relevant_documents(query)])
     
     def play_card(room, cap):
+        """Пример правильного вызова инструмента:
+        Чтобы сыграть карту опасности "пожар" в комнату 3, нужно вызвать:
+        {"room": 3, "cap": "пожар"}"""
         return console.play_card(room, cap)
     
     def play_anomaly(anomaly_ind):
+        """Пример правильного вызова инструмента:
+        Чтобы сыграть первую карту аномалий:
+        {"anomaly_ind": 0}"""
         return console.play_anomaly(anomaly_ind)
 
     retrieve_rulebook = StructuredTool.from_function(
-        name="Поиск по правилам",
+        name="search_rulebook",
         description="Поиск информации в книге правил по текстовому запросу",
         func=retrieve,
         args_schema=RulebookQuery
     )
 
     play_card = StructuredTool.from_function(
-        name="Сыграть карту опасностей",
-        description="Сыграть фишку опасности в указанную комнату. Требует room и cap.",
+        name="play_hazard_card",
+        description="Сыграть фишку опасности в указанную комнату. Требует номер комнаты и фишку.",
         func=play_card,
         args_schema=PlayCardInput
     )
 
     play_anomaly = StructuredTool.from_function(
-        name="Сыграть карту аномалий",
-        description="Разыграть выбранную аномалию по её индексу. Требует anomaly_ind.",
+        name="play_anomaly_card",
+        description="Разыграть выбранную аномалию по её индексу. Требует номер карты аномалий.",
         func=play_anomaly,
         args_schema=PlayAnomalyInput
     )

@@ -83,7 +83,7 @@ class Console:
             return 'сыграно слишком мало фишек'
 
     def play_card(self, room: int = 1, cap: str = 'шпионаж'):
-        """room: str - номер комнаты в которую нужно сыграть фишку
+        """room: int - номер комнаты в которую нужно сыграть фишку
         cap: str - фишка которую надо сыграть"""
         has_room = False
         card = None
@@ -111,6 +111,7 @@ class Console:
         self.cards.pop(card)
         self.draw_cap()
         self.draw_cap()
+        print(f'разыграна фишка {cap} в комнату {room}')
         return f'разыграна фишка {cap} в комнату {room}'
 
         
